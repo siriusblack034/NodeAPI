@@ -1,8 +1,6 @@
 const User = require('../models/User')
 const Deck = require('../models/Deck')
-const deleteUser = async(req,res,next)=>{
 
-}
 const index = async (req, res, next) => {
   try {
     const users = await User.find({});
@@ -12,11 +10,20 @@ const index = async (req, res, next) => {
 
   }
 }
+const deleteUser = async (req, res, next) => {
+  try {
+    const { userID } = req.params
+    await User.deleteOne({ "_id": userID })
+    return res.status(200).json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+}
 const getUserDecks = async (req, res, next) => {
   try {
     const { userID } = req.params
     const user = await (User.findById(userID)).populate('decks')
-    return res.status(200).json({ decks: user })
+    return res.status(200).json({ decks: user.decks })
   } catch (error) {
     next(error)
   }
@@ -79,6 +86,7 @@ const replaceUser = async (req, res, next) => {
 module.exports = {
   index,
   createUser,
+  deleteUser,
   getUser,
   updateUser,
   replaceUser,

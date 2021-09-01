@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const logger = require('morgan') // logs middleware yarn add morgan --dev
 const app = express()
+const secureApi = require('helmet')
 const userRoute = require('./routers/users')
 const mongooseClient = require('mongoose')
 mongooseClient.connect('mongodb://localhost/nodejsapi').then(() => {
@@ -15,6 +16,7 @@ mongooseClient.connect('mongodb://localhost/nodejsapi').then(() => {
 //Middleware
 app.use(logger('dev'));
 app.use(bodyParser.json())
+app.use(secureApi())
 //Routes
 app.use('/users', userRoute)
 app.get('/', (req, res, next) => {
